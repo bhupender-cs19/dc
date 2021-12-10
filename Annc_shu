@@ -1,0 +1,30 @@
+Mutual exclusion non token based:
+
+#include<stdio.h>
+int main(){
+int number_of_processes;
+int wanting_entry[20];
+int process_id;
+int count = 0;
+char flag='y';
+printf("************\t\tLamport's Distributed Mutual Exclusion
+Algorithm\t\t************\n\n");
+printf("enter no of processes:\t");
+scanf("%d",&number_of_processes);
+printf("\nEnter process number in sequence of logical clock sequence\n\n");
+do{
+printf("enter the process no which want to execute critical section:\t");
+scanf("%d",&process_id);
+wanting_entry[count]=process_id;
+count++;
+printf("some other process want to execute cs? then press y:\t");
+scanf(" %c",&flag);
+}while(flag =='y');
+for(int j=0;j<count;j++) {
+printf("\ncritical section is executing for process %d in queue.....
+",wanting_entry[j]);
+printf("\ncritical section is finished for process %d",wanting_entry[j]);
+printf("\nrelease msg has sent by process%d\n",wanting_entry[j]);
+}
+return 0;
+}
