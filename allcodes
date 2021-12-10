@@ -1,0 +1,697 @@
+//All
+
+INDEX
+1	Write a program in c for implementation of non-token base algorithm for distributed mutual exclusion.	
+2	Write a program in C to implement Lamports logical clock.	
+3	Write a program to implement edge chasing distributed deadlock detection algorithm.	
+4	Write a program in C to implement locking algorithm.	
+5	Write a program to implement Remote Method Invocation.	
+6	Write a program to implement Remote Procedure Call.	
+7	Write a program to implement Chat Server	
+8	Write a Program to implement termination detection	
+9	Implement RSA.	
+10	Implement Diff Hellman Key exchange algorithm.	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.) Write a program in c for implementation of non-token base algorithm for distributed mutual exclusion.
+
+#include<stdio.h>
+#include<conio.h>
+void main()
+{
+    int i,d,p,a,c=0,aa[10],j,n;
+    char ch='y';
+    printf("Enter no of processes: ");
+    scanf("%d",&n);
+    i=0;
+    do
+    {
+        printf("Enter the process no which want to execute critical section: ");
+        scanf("%d",&a);
+        aa[i]=a;
+        i++;
+        c=c+1;
+        d=i;
+        printf("Some other process want to execute CS? then press y: ");
+        fflush(0);
+        scanf("%c",&ch);
+    }
+    while(ch=='y');
+    for(j=1; j<=c; j++)
+    {
+        printf("\nCritical section is executing for process %d in queue..... ",j);
+        printf("\nCritical section is finished for process %d.",j);
+        printf("\nEelease msg has been sent by process %d.",j);
+    }
+    getch();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.) Write a program in C to implement Lamports logical clock.
+
+#include<stdio.h>
+#include<conio.h>
+struct process
+{
+    int e;
+    int ts[10];
+} p[10];
+void main()
+{
+    int i,j,n,m,t,e1,e2;
+    char ch;
+    printf("Enter the no. of process: ");
+    scanf("%d",&n);
+    for(i=0; i<n; i++)
+    {
+        printf("Enter the no. of events in process %d: ",i+1);
+        scanf("%d",&p[i].e);
+        for(j=0; j<p[i].e; j++)
+        {
+            p[i].ts[j]=j+1;
+        }
+    }
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<p[i].e; j++)
+            printf("%d ",p[i].ts[j]);
+        printf("\n");
+    }
+    do
+    {
+        printf("Enter the process no & event no. from which message is passing (less than %d): ",n);
+        scanf("%d %d",&m,&e1);
+        printf("Enter the process no & event no. on which msg is passing (less than %d): ",n);
+        scanf("%d %d",&t,&e2);
+        if((p[m].ts[e1]+1)>p[t].ts[e2])
+        {
+            p[t].ts[e2]=p[m].ts[e1]+1;
+            for(i=e2; i<p[t].e; i++)
+            {
+                p[t].ts[i+1]=p[t].ts[i]+1;
+            }
+        }
+        printf("Is there more message(y/n): ");
+        fflush(0);
+        scanf("%c",&ch);
+    }
+    while(ch=='y'&& ch=='Y');
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<p[i].e; j++)
+            printf("%d ",p[i].ts[j]);
+        printf("\n");
+    }
+    getch();
+}
+
+
+
+ 
+3.) Write a program to implement edge chasing distributed deadlock detection algorithm.
+
+#include <stdio.h>
+#include <conio.h>
+void main()
+{
+    int temp, process[10][15], site_count = 0, process_count = 0, i, j, k, waiting[15];
+    int p1, p2, p3;
+    printf("\n Enter the no. of sites (max 3) \n");
+    scanf("%d", &site_count);
+    for (i = 1; i <= site_count; i++)
+    {
+        printf("\n Enter the no. of processes in %d site ( max 4)\n", i);
+        scanf("%d", &process_count);
+        for (j = 0; j < process_count; j++)
+        {
+            process[i][j] = i + (i * j);
+        }
+    }
+    printf("\n Enter the blocked process \n");
+    scanf("%d", &k);
+    for (i = 1; i <= 3; i++)
+    {
+        for (j = 0; j <= 3; j++)
+        {
+            if (k == process[i][j])
+            {
+                printf("Process %d is at site %d ", k, i);
+                temp = i;
+            }
+            if (k == process[i][j])
+                printf("It is a deadlock \n");
+            if (k == (process[temp][j]) && ((process[temp][j]) == waiting[process[i][j]]) && (temp != i))
+            {
+                //probe(temp,j,process[i][j]);
+                if (process[i][j] == waiting[process[temp][j]])
+                    ;
+                printf("It is a deadlock\n");
+            }
+        }
+    }
+    getch();
+}
+ 
+
+
+
+
+
+
+ 
+4.) Write a program in C to implement locking algorithm.
+
+#include <stdio.h>
+#include <conio.h>
+void main()
+{
+    int a = 0;
+    char b, c;
+    do
+    {
+        printf("'y' If transaction T1 want to lock data object: ");
+        fflush(0);
+        scanf("%c", &b);
+        if (a == 0 && b == 'y')
+        {
+            a = 1;
+            b = 'n';
+        }
+        else if (a == 1)
+            printf("Data object is locked");
+        printf("If transaction T2 want to lock data object: ");
+        fflush(0);
+        scanf("%c", &b);
+        if (a == 0 && b == 'y')
+        {
+            a = 1;
+            b = 'n';
+        }
+        else
+            printf("Data object is locked");
+        printf("\nIf transaction want to release data object: ");
+        fflush(0);
+        scanf("%c", &b);
+        if (a == 1 && b == 'y')
+            a = 0;
+        printf("Do you want to continue: ");
+        fflush(0);
+        scanf("%c", &c);
+    } while (c == 'y');
+    getch();
+}
+
+
+
+
+
+
+
+
+5.) Write a program to implement Remote Method Invocation.
+
+import java.rmi.*;
+
+public class AddClient
+{
+    public static void main(String args[])
+    {
+        try
+        {
+            String addServerURL = "rmi://" + args[0] + "/Addserver";
+            AddServerIntf addServerIntf = (AddServerIntf)Naming.lookup(addServerURL);
+            System.out.println("the first number is :"+args[1]);
+            double d1 =Double.valueOf(args[1]).doubleValue();
+            System.out.println("the second number is :"+args[2]);
+            double d2 =Double.valueOf(args[2]).doubleValue();
+            System.out.println("The sum is:" + addServerIntf.add(d1,d2));
+        }
+        catch (Exception e)
+        {
+            System.out.println(" Exception:" +e);
+        }
+    }
+}
+// Add Server
+import java.net.*;
+import java.rmi.*;
+
+public class AddServer
+{
+    public static void main(String [] args)
+    {
+        try
+        {
+            AddServerImpl addServerImpl = new AddServerImpl();
+            Naming.rebind("Addserver",addServerImpl);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception: " +e);
+        }
+    }
+}
+// Add Server IMPL
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class AddServerImpl extends UnicastRemoteObject implements AddServerIntf
+{
+    public AddServerImpl() throws RemoteException
+    {
+    }
+    public double add(double d1, double d2) throws RemoteException
+    {
+        return d1+d2;
+    }
+}
+// ADD SERVER INTF
+import java.rmi.*;
+
+public interface AddServerIntf extends Remote
+{
+    double add(double d1, double d2) throws RemoteException;
+}
+
+
+ 
+6.) Write a program to implement Remote Procedure Call. 
+/*
+* rdate.c client program for remote date program
+*/
+#include <stdio.h>
+#include <rpc/rpc.h> /* standard RPC include file */
+#include "date.h"    /* this file is generated by rpcgen */
+main(int argc, char *argv[])
+{
+    CLIENT *cl; /* RPC handle */
+    char *server;
+    long *lresult;  /* return value from bin_date_1() */
+    char **sresult; /* return value from str_date_1() */
+    if (argc != 2)
+    {
+        fprintf(stderr, "usage: %s hostname\n", argv[0]);
+        exit(1);
+    }
+    server = argv[1];
+    /*
+* Create client handle
+*/
+    if ((cl = clnt_create(server, DATE_PROG, DATE_VERS, "udp")) == NULL)
+    {
+        /*
+* can’t establish connection with server
+*/
+        clnt_pcreateerror(server);
+        exit(2);
+    }
+    /*
+* First call the remote procedure "bin_date".
+*/
+    if ((lresult = bin_date_1(NULL, cl)) == NULL)
+    {
+        clnt_perror(cl, server);
+        exit(3);
+    }
+    printf("time on host %s = %ld\n", server, *lresult);
+    /*
+* Now call the remote procedure str_date
+*/
+    if ((sresult = str_date_1(lresult, cl)) == NULL)
+    {
+        clnt_perror(cl, server);
+        exit(4);
+    }
+    printf("time on host %s = %s", server, *sresult);
+    clnt_destroy(cl); /* done with the handle */
+    exit(0);
+}
+/*
+* date.x Specification of the remote date and time server
+*/
+/*
+* Define two procedures
+* bin_date_1() returns the binary date and time (no arguments)
+* str_date_1() takes a binary time and returns a string
+*
+*/
+program DATE_PROG
+{
+    version DATE_VERS
+    {
+        long BIN_DATE(void) = 1;   /* procedure number = 1 */
+        string STR_DATE(long) = 2; /* procedure number = 2 */
+    }
+    = 1; /* version number = 1 */
+}
+= 0x31234567;
+/*
+* dateproc.c remote procedures; called by server stub
+*/
+#include <time.h>
+#include <rpc/rpc.h> /* standard RPC include file */
+#include "date.h"    /* this file is generated by rpcgen */
+/*
+* Return the binary date and time
+*/
+long *bin_date_1_svc(void *arg, struct svc_req *s)
+{
+    static long timeval; /* must be static */
+    timeval = time((long *)0);
+    return (&timeval);
+}
+/*
+* Convert a binary time and return a human readable string
+*/
+char **str_date_1_svc(long *bintime, struct svc_req *s)
+{
+    static char *ptr;                     /* must be static */
+    ptr = ctime((const time_t *)bintime); /* convert to local time */
+    return (&ptr);
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7.)Write a program to implement Chat Server.
+
+//Server
+import java.net.*;
+import java.io.*;
+public class servertcp
+{
+    public static void main(String args[]) throws IOException
+    {
+        ServerSocket ss=new ServerSocket(12);
+        Socket s=ss.accept();
+        System.out.println("Connection from "+s);
+        PrintWriter pw1=new PrintWriter(s.getOutputStream(),true);
+        BufferedReader br3=new BufferedReader(new InputStreamReader(s.getInputStream()));
+        BufferedReader br4=new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("i m ready");
+        String s1, s2;
+        /*while((s1=br4.readLine())!=null)
+        {
+        pw1.println(s1);
+        System.out.println(s2);
+        }
+        */
+        while(true)
+        {
+            do
+            {
+                s1=br4.readLine();
+                pw1.println(s1);
+            }
+            while(!s1.equals("over"));
+            do
+            {
+                s2=br3.readLine();
+                System.out.println(s2);
+            }
+            while(!s2.equals("over"));
+        }
+    }
+}
+// Client
+import java.net.*;
+import java.io.*;
+public class clienttcp
+{
+    public static void main(String args[]) throws IOException
+    {
+        Socket cc=new Socket(InetAddress.getLocalHost(),12);
+        PrintWriter pw=new PrintWriter(cc.getOutputStream(),true);
+        BufferedReader br1=new BufferedReader(new InputStreamReader(cc.getInputStream()));
+        BufferedReader br2=new BufferedReader(new InputStreamReader(System.in));
+        String str1, str2;
+        /*while((str1=br2.readLine())!=null)
+        {
+        System.out.println(str1);
+        //pw.println(str2);
+        }
+        */
+        while(true)
+        {
+            do
+            {
+                str1=br1.readLine();
+                System.out.println(str1);
+            }
+            while(!str1.equals("over"));
+            do
+            {
+                str2=br2.readLine();
+                pw.println(str2);
+            }
+            while(!str2.equals("over"));
+        }
+    }
+}
+
+
+
+ 
+8.) Write a Program to implement termination detection.
+
+#include <stdio.h>
+#include <conio.h>
+#include <dos.h>
+#include <stdlib.h>
+#include <math.h>
+void main()
+{
+    int i, j, k = 0, n, tw, total = 0, we, ca, w[20];
+    printf("Enter the no of process=");
+    scanf("%d", &n);
+    printf("\nAssign a controlling agent=");
+    scanf("%d", &ca);
+    printf("\n\nEnter the total weight=");
+    scanf("%d", &tw);
+    while ((k < n))
+    {
+        randomize();
+        w[k] = random(tw);
+        tw = tw - w[k];
+        k++;
+    }
+    for (k = 0; k < n; k++)
+    {
+        total = total + w[k];
+    }
+    printf("%d", total);
+    w[n - 1] = abs(tw - total);
+    printf("%d", w[n - 1]);
+    printf("\n\t\t\t\tControlling agent%d %d\n", ca, w[ca]);
+    printf("\n\nSending computational message to...\n");
+    for (j = 0; j < n; j++)
+    {
+        if (j != (ca - 1))
+        {
+            sound(700);
+            delay(2000);
+            printf("\tProcess%d %d", j + 1, w[j]);
+        }
+    }
+    nosound();
+    getch();
+}
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+9.) Implement RSA.
+
+// C program for RSA
+#include <stdio.h>
+#include <math.h>
+// Returns gcd of a and b
+int gcd(int a, int h)
+{
+    int temp;
+    while (1)
+    {
+        temp = a % h;
+        if (temp == 0)
+            return h;
+        a = h;
+        h = temp;
+    }
+}
+// Code to demonstrate RSA algorithm
+int main()
+{
+    // Two random prime numbers
+    double p = 3;
+    double q = 7;
+    // First part of public key:
+    double n = p * q;
+    // Finding other part of public key.
+    // e stands for encrypt
+    double e = 2;
+    double phi = (p - 1) * (q - 1);
+    while (e < phi)
+    {
+        // e must be co-prime to phi and
+        // smaller than phi.
+        if (gcd(e, phi) == 1)
+            break;
+        else
+            e++;
+    }
+    // Private key (d stands for decrypt)
+    // choosing d such that it satisfies
+    // d*e = 1 + k * totient
+    int k = 2; // A constant value
+    double d = (1 + (k * phi)) / e;
+
+    // Message to be encrypted
+    double msg = 12;
+    printf("Message data = %lf", msg);
+    // Encryption c = (msg ^ e) % n
+    double c = pow(msg, e);
+    c = fmod(c, n);
+    printf("\nEncrypted data = %lf", c);
+    // Decryption m = (c ^ d) % n
+    double m = pow(c, d);
+    m = fmod(m, n);
+    printf("\nOriginal Message Sent = %lf", m);
+    return 0;
+}
+
+ 
+10.) Implement Diff Hellman key exchange algorithm.
+
+/* This program calculates the Key for two persons
+using the Diffie-Hellman Key exchange algorithm */
+#include <stdio.h>
+#include <math.h>
+// Power function to return value of a ^ b mod P
+long long int power(long long int a, long long int b, long long int P)
+{
+    if (b == 1)
+        return a;
+    else
+        return (((long long int)pow(a, b)) % P);
+}
+//Driver program
+int main()
+{
+    long long int P, G, x, a, y, b, ka, kb;
+    // Both the persons will be agreed upon the
+    // public keys G and P
+    P = 23; // A prime number P is taken
+    printf("The value of P : %lld\n", P);
+    G = 9; // A primitive root for P, G is taken
+    printf("The value of G : %lld\n\n", G);
+    // Alice will choose the private key a
+    a = 4; // a is the chosen private key
+    printf("The private key a for Alice : %lld\n", a);
+    x = power(G, a, P); // gets the generated key
+    // Bob will choose the private key b
+    b = 3; // b is the chosen private key
+    printf("The private key b for Bob : %lld\n\n", b);
+    y = power(G, b, P); // gets the generated key
+    // Generating the secret key after the exchange
+    // of keys
+    ka = power(y, a, P); // Secret key for Alice
+    kb = power(x, b, P); // Secret key for Bob
+    printf("Secret key for the Alice is : %lld\n", ka);
+    printf("Secret Key for the Bob is : %lld\n", kb);
+    return 0;
+}
+
+
